@@ -1,0 +1,15 @@
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: {{ .Values.node.name }}-nodes-service
+  labels:
+    app.kubernetes.io/component: {{ .Values.node.name }}-service
+    app.kubernetes.io/name: {{ .Values.node.name }}-node
+    app.kubernetes.io/part-of: chain-{{ .Values.node.name }}
+spec:
+  endpoints:
+    - interval: 30s
+      port: http
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.node.name }}-node
