@@ -1,9 +1,0 @@
-apiVersion: v1
-data:
-  config.yaml: |
-    key-store-path: "/home/node/signer/keyFiles"
-    http-listen-host: "0.0.0.0"
-    http-host-allowlist: ["*"]
-kind: ConfigMap
-metadata:
-  name: config-signer

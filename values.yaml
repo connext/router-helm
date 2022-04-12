@@ -5,54 +5,70 @@ imagePullPolicy: Always
 
 node:
   name: router
-  region: euc1
-  network: mainnet
+
 service:
   enabled: true
-privatekey: test
-chain:
-  avalanche:
-      enable: "true"
-      rpc: 
-        - https://api.avax.network/ext/bc/C/rpc
-  arbitrum:
-      enable: "false"
-      rpc: 
-        - https://arb1.arbitrum.io/rpc
-  bsc:
-      enable: "true"
-      rpc: 
-        - https://bsc-dataseed.binance.org/
-        - https://bsc-dataseed1.defibit.io/
-        - https://bsc-dataseed1.ninicoin.io/
-  fantom:
-      enable: "true"
-      rpc: 
-        - http://fantom-node.chain-fantom:18545
-        - https://rpcapi.fantom.network
-        - https://rpc.ftm.tools
-  moonriver:
-      enable: "true"
-      rpc: 
-        - https://rpc.moonriver.moonbeam.network
-  polygon:
-      enable: "true"
-      rpc: 
-        - https://polygon-rpc.com/
-  xdai:
-      enable: "false"
-      rpc: 
-        - https://rpc.xdaichain.com/
-        - https://xdai.poanetwork.dev/
-        - https://dai.poa.network/
 
-labels:
-  chain: connext
-  environment: prod
-  network: mainnet
+config: |-
+    {
+        "adminToken": "",
+        "chainConfig": {
+          "100": {
+          "providers": [
+            "https://rpc.xdaichain.com/",
+            "https://xdai.poanetwork.dev/",
+            "https://dai.poa.network/"
+          ]
+          },
+        "2001": {
+            "providers": [
+              "https://rpc.c1.milkomeda.com:8545"],
+            "minGas": "10000000000000"
+          },
+        "1": {
+          "providers": [
+            "https://cloudflare-eth.com"
+          ]
+        }
+        },
+        "logLevel": "info",
+        "network": "mainnet",
+        ## Fill mnemonic operator
+        "mnemonic": "",
+        ## Fill the router contract address
+        "routerContractAddress": "",
+        "swapPools": [
+            {
+            "name": "USDT",
+            "assets": [
+                {
+              "chainId": 100,
+              "assetId": "0x4ECaBa5870353805a9F068101A40E0f32ed605C6"
+              },
+              {
+                "chainId": 2001,
+                "assetId": "0xab58da63dfdd6b97eaab3c94165ef6f43d951fb2"
+              }
+            ]
+            },   {
+                "name": "USDC",
+                "assets": [
+                {
+                  "chainId": 100,
+                  "assetId": "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83"
+                  },
+                  {
+                  "chainId": 2001,
+                  "assetId": "0x5a955fddf055f2de3281d99718f5f1531744b102"
+                  }
+                ]
+              }
+            ]
+        }  
+
 image:
   name: ghcr.io/connext/nxtp-router
-  tag: v0.0.82
+  tag: v0.1.34
 
 
 resources:
@@ -67,6 +83,11 @@ services:
     protocol: TCP
     externalPort: 8080
     internalPort: 8080
+  metrics:
+    protocol: TCP
+    externalPort: 8081
+    internalPort: 8081
+
 
 tolerations: []
 

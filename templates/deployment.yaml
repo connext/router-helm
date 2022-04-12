@@ -33,14 +33,6 @@ spec:
             defaultMode: 420
             secretName: config-router
           name: config-router
-        - secret:
-            defaultMode: 420
-            secretName: signing-key
-          name: signing-key
-        - configMap:
-            defaultMode: 420
-            name: config-signer
-          name: config-signer
       containers:
       - name: node
         image: {{ .Values.image.name }}:{{ .Values.image.tag }}
@@ -56,19 +48,6 @@ spec:
           - mountPath: /home/node/router/config.json
             name: config-router
             subPath: config.json
-      - name: signer
-        image: consensys/web3signer:develop
-        imagePullPolicy: {{ .Values.imagePullPolicy }}
-        volumeMounts:
-          - mountPath: /home/node/signer/keyFiles/key.yaml
-            name: signing-key
-            subPath: key.yaml
-          - mountPath:  /home/node/signer/config.yaml
-            name: config-signer
-            subPath: config.yaml
-        args:  
-          - "--config-file=/home/node/signer/config.yaml" 
-          - "eth1"
       hostNetwork: {{ .Values.hostNetwork }}
       dnsPolicy: {{ .Values.dnsPolicy }}
       {{- if .Values.affinity }}
