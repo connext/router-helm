@@ -27,65 +27,49 @@ Under config fill the config.json needed for the router:
 
 ```sh
 config: |-
-    {
-        "adminToken": "",
-        "chainConfig": {
-          "100": {
-          "providers": [
-            "https://rpc.xdaichain.com/",
-            "https://xdai.poanetwork.dev/",
-            "https://dai.poa.network/"
-          ]
-          },
-        "2001": {
-            "providers": [
-              "https://rpc.c1.milkomeda.com:8545"],
-            "minGas": "10000000000000"
-          },
-        "1": {
-          "providers": [
-            "https://cloudflare-eth.com"
-          ]
-        }
+      {
+        "network":"testnet",
+        "logLevel": "debug",
+        "web3SignerUrl": "http://0.0.0.0:9000",
+        "sequencerUrl": "https://sequencer.testnet.staging.connext.ninja",
+        "redis": {
+          "host": "redis-master",
+          "port": 6379
         },
-        "logLevel": "info",
-        "network": "mainnet",
-        ## Fill mnemonic operator
-        "mnemonic": "",
-        ## Fill the router contract address
-        "routerContractAddress": "",
-        "swapPools": [
-            {
-            "name": "USDT",
+        "server": {
+          "adminToken": "blablabla",
+          "port": 8080
+        },
+        "chains": {
+          "2000": {
+            "providers": ["https://rinkeby.infura.io/v3/38f8f85747014e87b48035d84398a97c"],
             "assets": [
-                {
-              "chainId": 100,
-              "assetId": "0x4ECaBa5870353805a9F068101A40E0f32ed605C6"
-              },
               {
-                "chainId": 2001,
-                "assetId": "0xab58da63dfdd6b97eaab3c94165ef6f43d951fb2"
+                "name": "TEST",
+                "address": "0x3CF0A8545bF9a768d019baea96EC19573FFE0665"
               }
             ]
-            },   {
-                "name": "USDC",
-                "assets": [
-                {
-                  "chainId": 100,
-                  "assetId": "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83"
-                  },
-                  {
-                  "chainId": 2001,
-                  "assetId": "0x5a955fddf055f2de3281d99718f5f1531744b102"
-                  }
-                ]
+          },
+          "3000": {
+            "providers": ["https://kovan.infura.io/v3/38f8f85747014e87b48035d84398a97c"],
+            "assets": [
+              {
+                "name": "TEST",
+                "address": "0x3CF0A8545bF9a768d019baea96EC19573FFE0665"
               }
             ]
-        }  
+          }
+        }
+      } 
 ```
 *This is just an example for the configuration file of the router
 
 See [Connext docs](https://docs.connext.network/Routers/Reference/configuration/) for configuration description.
+
+** To configure web3signer just add in values.yaml the private key of the wallet you want to use
+```
+web3signer: <signer>
+```
 
 3. Inside the cloned repository directory, run:
 

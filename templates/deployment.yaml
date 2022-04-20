@@ -32,15 +32,15 @@ spec:
         - secret:
             defaultMode: 420
             secretName: config-router
+          name: config-router
+        - secret:
+            defaultMode: 420
+            secretName: signing-key
           name: signing-key
         - configMap:
             defaultMode: 420
             name: config-signer
           name: config-signer
-        - secret:
-            defaultMode: 420
-            secretName: config-router
-          name: config-router
       containers:
       - name: node
         image: {{ .Values.image.name }}:{{ .Values.image.tag }}
@@ -53,9 +53,12 @@ spec:
             memory: {{ .Values.resources.limits.memory }}
             cpu: {{ .Values.resources.limits.cpu }}
         volumeMounts:
-          - mountPath: /home/node/router/config.json
+          - mountPath: /config/config.json
             name: config-router
             subPath: config.json
+        env:
+          - name: NXTP_CONFIG_FILE
+            value: /config/config.json
       - name: signer
         image: consensys/web3signer:develop
         imagePullPolicy: {{ .Values.imagePullPolicy }}

@@ -10,7 +10,42 @@ service:
   enabled: true
 
 config: |-
-    {"mnemonic":"string","logLevel":"debug","sequencerUrl":"https://sequencer.testnet.staging.connext.ninja","redis":{"host":"redis-master","port":6379},"server":{"adminToken":"mathayus","port":8080},"chains":{"100":{"providers":["https://rpc.xdaichain.com/","https://xdai.poanetwork.dev/","https://dai.poa.network/"],"assets":[{"name":"USDT","address":"0x4ECaBa5870353805a9F068101A40E0f32ed605C6"},{"name":"USDC","address":"0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83"}]},"2001":{"providers":["https://rpc.c1.milkomeda.com:8545"],"assets":[{"name":"USDT","address":"0xab58da63dfdd6b97eaab3c94165ef6f43d951fb2"},{"name":"USDC","address":"0x5a955fddf055f2de3281d99718f5f1531744b102"}]}}}
+      {
+        "network":"testnet",
+        "logLevel": "debug",
+        "web3SignerUrl": "http://0.0.0.0:9000",
+        "sequencerUrl": "https://sequencer.testnet.staging.connext.ninja",
+        "redis": {
+          "host": "redis-master",
+          "port": 6379
+        },
+        "server": {
+          "adminToken": "blablabla",
+          "port": 8080
+        },
+        "chains": {
+          "2000": {
+            "providers": ["https://rinkeby.infura.io/v3/38f8f85747014e87b48035d84398a97c"],
+            "assets": [
+              {
+                "name": "TEST",
+                "address": "0x3CF0A8545bF9a768d019baea96EC19573FFE0665"
+              }
+            ]
+          },
+          "3000": {
+            "providers": ["https://kovan.infura.io/v3/38f8f85747014e87b48035d84398a97c"],
+            "assets": [
+              {
+                "name": "TEST",
+                "address": "0x3CF0A8545bF9a768d019baea96EC19573FFE0665"
+              }
+            ]
+          }
+        }
+      }
+
+web3signer: <signer>
 
 image:
   name: ghcr.io/connext/router
