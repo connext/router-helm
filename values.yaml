@@ -10,62 +10,47 @@ service:
   enabled: true
 
 config: |-
-    {
-        "adminToken": "",
-        "chainConfig": {
-          "100": {
-          "providers": [
-            "https://rpc.xdaichain.com/",
-            "https://xdai.poanetwork.dev/",
-            "https://dai.poa.network/"
-          ]
-          },
-        "2001": {
-            "providers": [
-              "https://rpc.c1.milkomeda.com:8545"],
-            "minGas": "10000000000000"
-          },
-        "1": {
-          "providers": [
-            "https://cloudflare-eth.com"
-          ]
-        }
-        },
-        "logLevel": "info",
-        "network": "mainnet",
-        ## Fill mnemonic operator
-        "mnemonic": "",
-        ## Fill the router contract address
-        "routerContractAddress": "",
-        "swapPools": [
-            {
+  {
+    "logLevel": "debug",
+    "sequencerUrl": "https://sequencer.testnet.staging.connext.ninja",
+    "redis": {
+      "host": "",
+      "port": 6379
+    },
+    "server": {
+      "adminToken": "mathayus",
+      "port": 8080
+    },
+    "chains": {
+      "100": {
+        "providers": ["https://rpc.xdaichain.com/","https://xdai.poanetwork.dev/","https://dai.poa.network/"],
+        "assets": [
+          {
             "name": "USDT",
-            "assets": [
-                {
-              "chainId": 100,
-              "assetId": "0x4ECaBa5870353805a9F068101A40E0f32ed605C6"
-              },
-              {
-                "chainId": 2001,
-                "assetId": "0xab58da63dfdd6b97eaab3c94165ef6f43d951fb2"
-              }
-            ]
-            },   {
-                "name": "USDC",
-                "assets": [
-                {
-                  "chainId": 100,
-                  "assetId": "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83"
-                  },
-                  {
-                  "chainId": 2001,
-                  "assetId": "0x5a955fddf055f2de3281d99718f5f1531744b102"
-                  }
-                ]
-              }
-            ]
-        }  
-
+            "address": "0x4ECaBa5870353805a9F068101A40E0f32ed605C6"
+          },
+          {
+            "name": "USDC",
+            "address": "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83"
+          }
+        ]
+      },
+      "2001": {
+        "providers": ["https://rpc.c1.milkomeda.com:8545"],
+        "assets": [
+          {
+            "name": "USDT",
+            "address": "0xab58da63dfdd6b97eaab3c94165ef6f43d951fb2"
+          },
+          {
+            "name": "USDC",
+            "address": "0x5a955fddf055f2de3281d99718f5f1531744b102"
+          }
+        ]
+      }
+    },
+  "mnemonic": ""
+}
 image:
   name: ghcr.io/connext/nxtp-router
   tag: v0.1.34
