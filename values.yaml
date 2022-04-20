@@ -10,51 +10,11 @@ service:
   enabled: true
 
 config: |-
-  {
-    "logLevel": "debug",
-    "sequencerUrl": "https://sequencer.testnet.staging.connext.ninja",
-    "redis": {
-      "host": "redis-master",
-      "port": 6379
-    },
-    "server": {
-      "adminToken": "mathayus",
-      "port": 8080
-    },
-    "chains": {
-      "100": {
-        "providers": ["https://rpc.xdaichain.com/","https://xdai.poanetwork.dev/","https://dai.poa.network/"],
-        "assets": [
-          {
-            "name": "USDT",
-            "address": "0x4ECaBa5870353805a9F068101A40E0f32ed605C6"
-          },
-          {
-            "name": "USDC",
-            "address": "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83"
-          }
-        ]
-      },
-      "2001": {
-        "providers": ["https://rpc.c1.milkomeda.com:8545"],
-        "assets": [
-          {
-            "name": "USDT",
-            "address": "0xab58da63dfdd6b97eaab3c94165ef6f43d951fb2"
-          },
-          {
-            "name": "USDC",
-            "address": "0x5a955fddf055f2de3281d99718f5f1531744b102"
-          }
-        ]
-      }
-    },
-  "mnemonic": ""
-}
-image:
-  name: ghcr.io/connext/nxtp-router
-  tag: v0.1.34
+    {"mnemonic":"string","logLevel":"debug","sequencerUrl":"https://sequencer.testnet.staging.connext.ninja","redis":{"host":"redis-master","port":6379},"server":{"adminToken":"mathayus","port":8080},"chains":{"100":{"providers":["https://rpc.xdaichain.com/","https://xdai.poanetwork.dev/","https://dai.poa.network/"],"assets":[{"name":"USDT","address":"0x4ECaBa5870353805a9F068101A40E0f32ed605C6"},{"name":"USDC","address":"0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83"}]},"2001":{"providers":["https://rpc.c1.milkomeda.com:8545"],"assets":[{"name":"USDT","address":"0xab58da63dfdd6b97eaab3c94165ef6f43d951fb2"},{"name":"USDC","address":"0x5a955fddf055f2de3281d99718f5f1531744b102"}]}}}
 
+image:
+  name: ghcr.io/connext/router
+  tag: latest
 
 resources:
   requests:
@@ -63,6 +23,7 @@ resources:
   limits:
     memory: "2Gi"
     cpu: "1000m"
+
 services:
   http:
     protocol: TCP
@@ -72,7 +33,6 @@ services:
     protocol: TCP
     externalPort: 8081
     internalPort: 8081
-
 
 tolerations: []
 
