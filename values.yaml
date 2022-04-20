@@ -14,7 +14,7 @@ config: |-
     "logLevel": "debug",
     "sequencerUrl": "https://sequencer.testnet.staging.connext.ninja",
     "redis": {
-      "host": "",
+      "host": "redis-master",
       "port": 6379
     },
     "server": {
