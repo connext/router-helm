@@ -64,7 +64,7 @@ config: |-
 ```
 *This is just an example for the configuration file of the router
 
-See [Connext docs](https://docs.connext.network/Routers/Reference/configuration/) for configuration description.
+See [Connext docs](https://docs.connext.network/Routers/configuration) for configuration description.
 
 ** To configure web3signer just add in values.yaml the private key of the wallet you want to use
 ```
