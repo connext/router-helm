@@ -15,9 +15,7 @@ config: |-
         "chainConfig": {
           "100": {
           "providers": [
-            "https://rpc.xdaichain.com/",
-            "https://xdai.poanetwork.dev/",
-            "https://dai.poa.network/"
+            "https://rpc.gnosischain.com/"
           ]
           },
         "2001": {
