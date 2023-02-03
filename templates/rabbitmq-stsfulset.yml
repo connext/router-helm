@@ -1,0 +1,83 @@
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    matchLabels:
+      app: "rabbitmq"
+  # headless service that gives network identity to the RMQ nodes, and enables them to cluster
+  serviceName: rabbitmq-headless # serviceName is the name of the service that governs this StatefulSet. This service must exist before the StatefulSet, and is responsible for the network identity of the set. Pods get DNS/hostnames that follow the pattern: pod-specific-string.serviceName.default.svc.cluster.local where "pod-specific-string" is managed by the StatefulSet controller.
+  replicas: 1
+  volumeClaimTemplates:
+  - metadata:
+      name: rabbitmq-data
+    spec:
+      # storageClassName: nas-thin
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: "2Gi"
+  template:
+    metadata:
+      name: rabbitmq
+      labels:
+        app: rabbitmq
+    spec:
+      volumes:
+      - name: rabbitmq-data
+        persistentVolumeClaim:
+          claimName: rabbitmq-data
+      serviceAccount: rabbitmq
+      
+      securityContext:
+        fsGroup: 999
+        runAsUser: 999
+        runAsGroup: 999
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:latest
+        volumeMounts:
+        - name: rabbitmq-data
+          mountPath: "/var/lib/rabbitmq/mnesia"
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: "guest"
+        - name: RABBITMQ_DEFAULT_PASS
+          value: "guest"
+        ports:
+        - name: amqp
+          containerPort: 5672
+          protocol: TCP
+        - name: management
+          containerPort: 15672
+          protocol: TCP
+        - name: prometheus
+          containerPort: 15692
+          protocol: TCP
+        - name: epmd
+          containerPort: 4369
+          protocol: TCP
+        resources:
+            requests:
+              memory: 1Gi
+              cpu: '1'
+            limits:
+              memory: 1Gi
+              cpu: '1'
+        livenessProbe:
+          exec:  
+            command: ["rabbitmq-diagnostics", "status"]
+          initialDelaySeconds: 120
+          
+          periodSeconds: 60
+          timeoutSeconds: 15
+        readinessProbe: # probe to know when RMQ is ready to accept traffic
+          exec:
+            command: ["rabbitmq-diagnostics", "ping"]
+          initialDelaySeconds: 20
+          periodSeconds: 60
+          timeoutSeconds: 10    

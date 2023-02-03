@@ -10,47 +10,103 @@ service:
   enabled: true
 
 config: |-
-      {
-        "network":"testnet",
+      { 
+        "environment": "production",
         "logLevel": "debug",
+        "network": "mainnet",
         "web3SignerUrl": "http://0.0.0.0:9000",
-        "sequencerUrl": "https://sequencer.testnet.staging.connext.ninja",
+        "messageQueue": {
+          "uri": "amqp://guest:guest@rabbitmq-client:5672"
+        },
         "redis": {
           "host": "redis-master",
           "port": 6379
         },
         "server": {
-          "adminToken": "blablabla",
+          "adminToken": "asdfasdf",
           "port": 8080
         },
         "chains": {
-          "2000": {
-            "providers": ["https://rinkeby.infura.io/v3/38f8f85747014e87b48035d84398a97c"],
+          "6648936": {
             "assets": [
               {
-                "name": "TEST",
-                "address": "0x3CF0A8545bF9a768d019baea96EC19573FFE0665"
+                "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                "name": "USDC"
               }
-            ]
+            ],
+            "providers": [ "https://rpc.ankr.com/eth" ]
           },
-          "3000": {
-            "providers": ["https://kovan.infura.io/v3/38f8f85747014e87b48035d84398a97c"],
+          "1634886255": {
             "assets": [
               {
-                "name": "TEST",
-                "address": "0x3CF0A8545bF9a768d019baea96EC19573FFE0665"
+                "address": "0x8c556cF37faa0eeDAC7aE665f1Bb0FbD4b2eae36",
+                "name": "nextUSDC"
               }
-            ]
+            ],
+            "providers": [ "https://rpc.ankr.com/arbitrum" ]
+          },
+          "1869640809": {
+            "assets": [
+              {
+                "address": "0x67E51f46e8e14D4E4cab9dF48c59ad8F512486DD",
+                "name": "nextUSDC"
+              }
+            ],
+            "providers": [ "https://rpc.ankr.com/optimism" ]
+          },
+          "1886350457": {
+            "assets": [
+              {
+                "address": "0xF96C6d2537e1af1a9503852eB2A4AF264272a5B6",
+                "name": "nextUSDC"
+              }
+            ],
+            "providers": [ "https://rpc.ankr.com/polygon" ]
+          },
+          "6450786": {
+            "assets": [
+              {
+                "address": "0x5e7D83dA751F4C9694b13aF351B30aC108f32C38",
+                "name": "nextUSDC"
+              }
+            ],
+            "providers": [ "https://bsc-dataseed.binance.org/" ]
+          },
+          "6778479": {
+            "assets": [
+              {
+                "address": "0x44CF74238d840a5fEBB0eAa089D05b763B73faB8",
+                "name": "nextUSDC"
+              }
+            ],
+            "providers": [ "https://rpc.gnosischain.com", "https://rpc.ankr.com/gnosis" ]
           }
         }
       }
 
-web3signer: <signer>
+web3signer: ""
 
 image:
   name: ghcr.io/connext/router
   tag: latest
 
+routerpublisher:
+  image: 
+    name: ghcr.io/connext/router-publisher
+    tag: sha-20b6014
+
+
+routersubscriber:
+  image: 
+    name: ghcr.io/connext/router-subscriber
+    tag: sha-20b6014
+
+rabbitmq:
+  image: 
+    name: rabbitmq
+    tag: 3.11.6-alpine
+
+    
 resources:
   requests:
     memory: "1Gi"
@@ -68,7 +124,18 @@ services:
     protocol: TCP
     externalPort: 8081
     internalPort: 8081
-
+  routerpublisher:
+    protocol: TCP
+    externalPort: 8091
+    internalPort: 8091
+  routersubscriber:
+    protocol: TCP
+    externalPort: 8090
+    internalPort: 8090
+  routersubscriber:
+    protocol: TCP
+    externalPort: 5672
+    internalPort: 5672
 tolerations: []
 
 affinity: []
