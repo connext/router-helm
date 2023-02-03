@@ -1,3 +1,4 @@
+{{- if .Values.service.enabled }}
 kind: ServiceMonitor
 apiVersion: monitoring.coreos.com/v1
 metadata:
@@ -12,4 +13,5 @@ spec:
       port: metrics
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Values.node.name }}-node
+      app.kubernetes.io/name: {{ .Values.node.name }}-executor-node
+{{- end }}

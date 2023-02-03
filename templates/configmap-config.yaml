@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  config.json: 
+    {{ toJson .Values.config | indent 2}}
+metadata:
+  name: config-router

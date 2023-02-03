@@ -1,15 +1,22 @@
-# NXTP Router helm
+# Amarok Router helm
 
-Production-ready helm for NXTP routers.
+Production-ready helm for Amarok routers.
 
 *This example helm deployment assumes that the cluster already has a monitoring stack installed
 
-## Router Setup Using helm
+This helm contains:
+- Redis
+- Web3signer
+- Router executer
+- Router publisher
+- Router subscriber
 
+## Router Setup Using helm
 ### Requirements
 
 - [ Kubernetes Cluster ](https://kubernetes.io/) version 1.18 or above
 - [ Helm ](https://helm.sh/docs/intro/install/) version 3
+- [ Rabbitmq ](https://www.rabbitmq.com/) (we used this [helm](https://bitnami.com/stack/rabbitmq/helm) to install on our cluster)
 
 ### Run helm deployment
 
@@ -21,76 +28,24 @@ git clone https://github.com/connext/nxtp-router-helm.git
 ```
 
 
-2.  Edit `values.yaml` file.
+2.  Edit `values-mainnet.yaml` or `values-testnet.yaml` file.
 
-Under config fill the config.json needed for the router:
+- Update the config with the proper rabbitmq endpoint.
+- Remove or add networks which are you planning to support
 
-```sh
-config: |-
-    {
-        "adminToken": "",
-        "chainConfig": {
-          "100": {
-          "providers": [
-            "https://rpc.xdaichain.com/",
-            "https://xdai.poanetwork.dev/",
-            "https://dai.poa.network/"
-          ]
-          },
-        "2001": {
-            "providers": [
-              "https://rpc.c1.milkomeda.com:8545"],
-            "minGas": "10000000000000"
-          },
-        "1": {
-          "providers": [
-            "https://cloudflare-eth.com"
-          ]
-        }
-        },
-        "logLevel": "info",
-        "network": "mainnet",
-        ## Fill mnemonic operator
-        "mnemonic": "",
-        ## Fill the router contract address
-        "routerContractAddress": "",
-        "swapPools": [
-            {
-            "name": "USDT",
-            "assets": [
-                {
-              "chainId": 100,
-              "assetId": "0x4ECaBa5870353805a9F068101A40E0f32ed605C6"
-              },
-              {
-                "chainId": 2001,
-                "assetId": "0xab58da63dfdd6b97eaab3c94165ef6f43d951fb2"
-              }
-            ]
-            },   {
-                "name": "USDC",
-                "assets": [
-                {
-                  "chainId": 100,
-                  "assetId": "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83"
-                  },
-                  {
-                  "chainId": 2001,
-                  "assetId": "0x5a955fddf055f2de3281d99718f5f1531744b102"
-                  }
-                ]
-              }
-            ]
-        }  
+3. Edit  `values.yaml` file.
+
+- ```web3signer: <signer>``` change the ```<signer>``` with the private key of the signer you are planning to use
+
+4. Inside the cloned repository directory, run:
+
+If you are planning to run the router on testnet please use ```values-testnet.yaml```:
 ```
-*This is just an example for the configuration file of the router
-
-See [Connext docs](https://docs.connext.network/Routers/Reference/configuration/) for configuration description.
-
-3. Inside the cloned repository directory, run:
-
+helm install . --generate-name  --values=values-testnet.yaml,values.yaml -n <namespace>
 ```
-helm install . --generate-name -n <namespace>
+If you are planning to run the router on mainnet please use ```values-mainnet.yaml```:
+```
+helm install . --generate-name  --values=values-mainnet.yaml,values.yaml -n <namespace>
 ```
 
 The output should look like below:
@@ -103,20 +58,20 @@ REVISION: 1
 TEST SUITE: None
 ```
 
-4. Check if the deployment was successful
+5. Check if the deployment was successful
 
 ```
 kubectl get pods
 ```
 
-5. Check the logs.
+6. Check the logs.
 
 ```
 kubectl logs <router-pod>
 ```
 
 
-6. Stop and delete the deployment.
+7. Stop and delete the deployment.
 
 ```
 helm uninstall <RELEASE_NAME> -n <namespace>
@@ -132,7 +87,7 @@ release "chart-<random number>" uninstalled
 
 ### Update Version
 
-1. Modify `values.yaml` to change `tag: v0.1.34` to the lastest image version
+1. Modify `values.yaml` to change `tag: sha-20b6014` to the lastest image version
 2. Check your chart name
 
 ```

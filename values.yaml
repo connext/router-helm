@@ -9,75 +9,20 @@ node:
 service:
   enabled: true
 
-config: |-
-    {
-        "adminToken": "",
-        "chainConfig": {
-          "100": {
-          "providers": [
-            "https://rpc.xdaichain.com/",
-            "https://xdai.poanetwork.dev/",
-            "https://dai.poa.network/"
-          ]
-          },
-        "2001": {
-            "providers": [
-              "https://rpc.c1.milkomeda.com:8545"],
-            "minGas": "10000000000000"
-          },
-        "1": {
-          "providers": [
-            "https://cloudflare-eth.com"
-          ]
-        }
-        },
-        "logLevel": "info",
-        "network": "mainnet",
-        ## Fill mnemonic operator
-        "mnemonic": "",
-        ## Fill the router contract address
-        "routerContractAddress": "",
-        "swapPools": [
-            {
-            "name": "USDT",
-            "assets": [
-                {
-              "chainId": 100,
-              "assetId": "0x4ECaBa5870353805a9F068101A40E0f32ed605C6"
-              },
-              {
-                "chainId": 2001,
-                "assetId": "0xab58da63dfdd6b97eaab3c94165ef6f43d951fb2"
-              }
-            ]
-            },   {
-                "name": "USDC",
-                "assets": [
-                {
-                  "chainId": 100,
-                  "assetId": "0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83"
-                  },
-                  {
-                  "chainId": 2001,
-                  "assetId": "0x5a955fddf055f2de3281d99718f5f1531744b102"
-                  }
-                ]
-              }
-            ]
-        }  
+web3signer: <signer>
 
+### image tag used for the executer, publisher and subscriber ###
 image:
-  name: ghcr.io/connext/nxtp-router
-  tag: v0.1.34
-
+  tag: sha-20b6014
 
 resources:
   requests:
-    memory: "1Gi"
+    memory: "0.5Gi"
     cpu: "500m"
   limits:
-    memory: "2Gi"
+    memory: "1.5Gi"
     cpu: "1000m"
+
 services:
   http:
     protocol: TCP
@@ -88,6 +33,11 @@ services:
     externalPort: 8081
     internalPort: 8081
 
+services_signer:
+  http:
+    protocol: TCP
+    externalPort: 9000
+    internalPort: 9000
 
 tolerations: []
 

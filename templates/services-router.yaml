@@ -1,0 +1,59 @@
+{{- if .Values.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.node.name }}-nodes-service
+  labels:
+    app.kubernetes.io/component: {{ .Values.node.name }}-service
+    app.kubernetes.io/name: {{ .Values.node.name }}-node
+    app.kubernetes.io/part-of: chain-{{ .Values.node.name }}
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: {{ .Values.node.name }}-executor-node
+  ports:
+  {{- range $name, $value := .Values.services }}
+  - name: {{ $name }}
+    protocol: "{{ $value.protocol }}"
+    port: {{ $value.externalPort }}
+    targetPort: {{ $value.internalPort }}
+  {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.node.name }}-pub-nodes-service
+  labels:
+    app.kubernetes.io/component: {{ .Values.node.name }}-service
+    app.kubernetes.io/name: {{ .Values.node.name }}-pub-node
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: {{ .Values.node.name }}-pub-node
+  ports:
+  {{- range $name, $value := .Values.services }}
+  - name: {{ $name }}
+    protocol: "{{ $value.protocol }}"
+    port: {{ $value.externalPort }}
+    targetPort: {{ $value.internalPort }}
+  {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.node.name }}-sub-nodes-service
+  labels:
+    app.kubernetes.io/component: {{ .Values.node.name }}-service
+    app.kubernetes.io/name: {{ .Values.node.name }}-sub-node
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: {{ .Values.node.name }}-sub-node
+  ports:
+  {{- range $name, $value := .Values.services }}
+  - name: {{ $name }}
+    protocol: "{{ $value.protocol }}"
+    port: {{ $value.externalPort }}
+    targetPort: {{ $value.internalPort }}
+  {{- end }}
+{{- end }}
