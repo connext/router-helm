@@ -67,6 +67,5 @@ config: |-
       "web3SignerUrl": "http://router-signer-service:9000",
       "messageQueue": {
         "uri": "amqp://guest:guest@rabbitmq:5672"
-      },
-      "cartographerUrl": "https://postgrest.mainnet.connext.ninja"
+      }
     }
