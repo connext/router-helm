@@ -1,0 +1,47 @@
+---
+
+# Headless service that makes it possible to lookup individual rabbitmq nodes
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-headless
+spec:
+  clusterIP: None
+  ports:
+  - name: epmd
+    port: 4369
+    protocol: TCP
+    targetPort: 4369
+  - name: cluster-rpc
+    port: 25672
+    protocol: TCP
+    targetPort: 25672
+  selector:
+    app: rabbitmq
+  type: ClusterIP
+  sessionAffinity: None
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: rabbitmq-client
+  labels:
+    app: rabbitmq
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: 15672
+      targetPort: management
+    - name: prometheus
+      protocol: TCP
+      port: 15692
+      targetPort: prometheus
+    - name: amqp
+      protocol: TCP
+      port: 5672
+      targetPort: amqp
+  selector:
+    app: rabbitmq

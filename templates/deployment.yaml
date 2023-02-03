@@ -42,23 +42,6 @@ spec:
             name: config-signer
           name: config-signer
       containers:
-      - name: node
-        image: {{ .Values.image.name }}:{{ .Values.image.tag }}
-        imagePullPolicy: {{ .Values.imagePullPolicy }}
-        resources:
-          requests:
-            memory: {{ .Values.resources.requests.memory }}
-            cpu: {{ .Values.resources.requests.cpu }}
-          limits:
-            memory: {{ .Values.resources.limits.memory }}
-            cpu: {{ .Values.resources.limits.cpu }}
-        volumeMounts:
-          - mountPath: /config/config.json
-            name: config-router
-            subPath: config.json
-        env:
-          - name: NXTP_CONFIG_FILE
-            value: /config/config.json
       - name: signer
         image: consensys/web3signer:develop
         imagePullPolicy: {{ .Values.imagePullPolicy }}
@@ -72,6 +55,34 @@ spec:
         args:  
           - "--config-file=/home/node/signer/config.yaml" 
           - "eth1"
+
+      - name: router-publisher
+        image: {{ .Values.routerpublisher.image.name }}:{{ .Values.routerpublisher.image.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        volumeMounts:
+          - mountPath: /home/node/packages/agents/router/config.json
+            name: config-router
+            subPath: config.json
+        ports:
+        - containerPort: 8091
+        
+      - name: router-subscriber
+        image: {{ .Values.routersubscriber.image.name }}:{{ .Values.routersubscriber.image.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        volumeMounts:
+          - mountPath: /home/node/packages/agents/router/config.json
+            name: config-router
+            subPath: config.json
+        ports:
+        - containerPort: 8090
+      
+      - name: rabbitmq
+        image: {{ .Values.rabbitmq.image.name }}:{{ .Values.rabbitmq.image.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        
+        ports:
+        - containerPort: 5672
+
       hostNetwork: {{ .Values.hostNetwork }}
       dnsPolicy: {{ .Values.dnsPolicy }}
       {{- if .Values.affinity }}
