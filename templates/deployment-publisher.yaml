@@ -1,11 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.node.name }}-node
+  name: {{ .Values.node.name }}-pub-node
   labels:
-    app.kubernetes.io/instance: {{ .Values.node.name }}-node
-    app.kubernetes.io/name: {{ .Values.node.name }}-node
-    app.kubernetes.io/part-of: chain-{{ .Values.node.name }}
+    app.kubernetes.io/instance: {{ .Values.node.name }}-pub-node
+    app.kubernetes.io/name: {{ .Values.node.name }}-pub-node
     app.kubernetes.io/version: {{ .Values.image.tag }}
     {{- if .Values.labels }}
 {{ toYaml .Values.labels | indent 4 }}
@@ -14,28 +13,26 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/instance: {{ .Values.node.name }}-node
-      app.kubernetes.io/name: {{ .Values.node.name }}-node
-      app.kubernetes.io/part-of: chain-{{ .Values.node.name }}
+      app.kubernetes.io/instance: {{ .Values.node.name }}-pub-node
+      app.kubernetes.io/name: {{ .Values.node.name }}-pub-node
   template:
     metadata:
       labels:
-        app.kubernetes.io/instance: {{ .Values.node.name }}-node
-        app.kubernetes.io/name: {{ .Values.node.name }}-node
-        app.kubernetes.io/part-of: chain-{{ .Values.node.name }}
+        app.kubernetes.io/instance: {{ .Values.node.name }}-pub-node
+        app.kubernetes.io/name: {{ .Values.node.name }}-pub-node
         {{- if .Values.labels }}
 {{ toYaml .Values.labels | indent 8 }}
         {{- end }}
     spec:
       securityContext: {}
       volumes:
-        - secret:
+        - configMap:
             defaultMode: 420
-            secretName: config-router
+            name: config-router
           name: config-router
       containers:
       - name: node
-        image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+        image: ghcr.io/connext/router-publisher:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         resources:
           requests:
@@ -44,10 +41,15 @@ spec:
           limits:
             memory: {{ .Values.resources.limits.memory }}
             cpu: {{ .Values.resources.limits.cpu }}
+        ports:
+        - containerPort: 8080
         volumeMounts:
-          - mountPath: /home/node/router/config.json
+          - mountPath: /home/node/packages/agents/router/config.json
             name: config-router
             subPath: config.json
+        env:
+          - name: NXTP_CONFIG
+            value: /home/node/packages/agents/router/config.json
       hostNetwork: {{ .Values.hostNetwork }}
       dnsPolicy: {{ .Values.dnsPolicy }}
       {{- if .Values.affinity }}

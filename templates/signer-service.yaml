@@ -1,0 +1,20 @@
+{{- if .Values.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.node.name }}-signer-service
+  labels:
+    app.kubernetes.io/component: {{ .Values.node.name }}-signer-service
+    app.kubernetes.io/name: {{ .Values.node.name }}-signer-service
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: {{ .Values.node.name }}-executor-node
+  ports:
+  {{- range $name, $value := .Values.services_signer }}
+  - name: {{ $name }}
+    protocol: "{{ $value.protocol }}"
+    port: {{ $value.externalPort }}
+    targetPort: {{ $value.internalPort }}
+  {{- end }}
+{{- end}}
