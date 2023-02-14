@@ -60,9 +60,8 @@ config: |-
           ]
         }
       },
-      "environment": "production",
+      "network": "mainnet",
       "logLevel": "debug",
-      "sequencerUrl": "https://sequencer.mainnet.connext.ninja",
       "server": { "adminToken": "MySecretTokenUnknown" },
       "web3SignerUrl": "http://router-signer-service:9000",
       "messageQueue": {
