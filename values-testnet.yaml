@@ -1,6 +1,5 @@
 config: |-
     { 
-      "environment": "staging",
       "logLevel": "debug",
       "network": "testnet",
       "web3SignerUrl": "http://signer:9000",
